@@ -17,30 +17,17 @@ const sections = document.querySelectorAll('section');
  */
 
 
-
-
 const LinksMaker = () => {
 
-   
-
-    sections.forEach(section => {
+    sections.forEach(item => {
 
 
-        // create new element to be added to the list
-        let element = document.createElement('li');
-        // create new anchor to be added to the element
-        let a = document.createElement("a");
+        let section = document.createElement('li');
+        section.className = 'menu__link';
+        section.dataset.nav = item.id;
 
-        a.setAttribute('href', `#${section.id}`);
-        a.setAttribute('data-page', section.id);
-
-
-        a.textContent = section.dataset.nav;
-        a.classList.add("menu__link");
-        // add the anchor to element list
-        element.appendChild(a);
-        // add the li to the to the list
-        navigation.appendChild(element);
+        section.innerText = item.dataset.nav;
+        navigation.appendChild(section);
 
 
     });
@@ -65,8 +52,10 @@ let observer = new IntersectionObserver(navCheck, options);
 
 function navCheck(entries) {
 
+
     entries.forEach((entry => {
-            // when 0.7 of the section is viewed on the viewport the correspending section on the navbar will be highlighed
+
+        // when 0.7 of the section is viewed on the viewport the correspending section on the navbar will be highlighed
         if (entry.intersectionRatio >= 0.7) {
 
 
@@ -74,23 +63,39 @@ function navCheck(entries) {
 
             CurrentSections.forEach(
                 (section) => section.classList.remove('current'));
+            let MakeCurrent = document.querySelector('li[data-nav="' + entry.target.id + '"]');
 
-            let MakeCurrent = document.querySelector(`.navbar__menu a[href="#${entry.target.id}"]`);
-
+            console.log(MakeCurrent);
             MakeCurrent.classList.add('current');
 
 
+
+
         }
-
-
-
 
     }));
 
 
 }
 
+
+function scrollToClick() {
+    navigation.addEventListener('click', function(event) {
+        const clicked = document.querySelector('#' + event.target.dataset.nav)
+        clicked.scrollIntoView();
+    });
+
+
+
+};
+
+
+
 sections.forEach(section => {
 
     observer.observe(section);
 });
+
+
+
+scrollToClick();
